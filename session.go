@@ -8,18 +8,15 @@ import (
 	"github.com/MichailKon/codeforces-api/utils"
 	"github.com/go-resty/resty/v2"
 	"github.com/rkennedy/optional"
-	"math/rand/v2"
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 )
 
 const (
-	baseUrl  string = "https://codeforces.com/api"
-	alphabet string = "abcdefghijklmnopqrstuvwxyz"
+	baseUrl string = "https://codeforces.com/api"
 )
 
 type CodeforcesApiError struct {
@@ -56,13 +53,10 @@ func NewCodeforcesSession(key string, secret string) *CodeforcesSession {
 }
 
 func (session *CodeforcesSession) generateApiSig(methodName string, parameters url.Values) string {
-	randval := strings.Builder{}
-	for i := 0; i < 6; i++ {
-		randval.WriteByte(alphabet[rand.IntN(len(alphabet))])
-	}
+	randval := "000000"
 
-	s := fmt.Sprintf("%v/%v?%v#%v", randval.String(), methodName, parameters.Encode(), session.secret)
-	return fmt.Sprintf("%v%x", randval.String(), sha512.Sum512([]byte(s)))
+	s := fmt.Sprintf("%v/%v?%v#%v", randval, methodName, parameters.Encode(), session.secret)
+	return fmt.Sprintf("%v%x", randval, sha512.Sum512([]byte(s)))
 }
 
 func (session *CodeforcesSession) makeQuery(methodName string, parameters url.Values, out any) error {
