@@ -1,4 +1,4 @@
-package codeforces_objects
+package objects
 
 type RatingChange struct {
 	ContestId               int    `json:"contestId"`

@@ -1,4 +1,6 @@
-package codeforces_objects
+package objects
+
+import "github.com/rkennedy/optional"
 
 type SubmissionVerdict string
 
@@ -42,17 +44,17 @@ const (
 )
 
 type Submission struct {
-	Id                  int                `json:"id"`
-	ContestId           *int               `json:"contestId"`
-	CreationTimeSeconds int                `json:"creationTimeSeconds"`
-	RelativeTimeSeconds int                `json:"relativeTimeSeconds"`
-	Problem             Problem            `json:"problem"`
-	Author              Party              `json:"author"`
-	ProgrammingLanguage string             `json:"programmingLanguage"`
-	Verdict             *SubmissionVerdict `json:"verdict"`
-	Testset             SubmissionTestset  `json:"testset"`
-	PassedTestCount     int                `json:"passedTestCount"`
-	TimeConsumedMillis  int                `json:"timeConsumedMillis"`
-	MemoryConsumedBytes int                `json:"memoryConsumedBytes"`
-	Points              *float64           `json:"points"`
+	Id                  int                               `json:"id"`
+	ContestId           optional.Value[int]               `json:"contestId"`
+	CreationTimeSeconds int                               `json:"creationTimeSeconds"`
+	RelativeTimeSeconds int                               `json:"relativeTimeSeconds"`
+	Problem             Problem                           `json:"problem"`
+	Author              Party                             `json:"author"`
+	ProgrammingLanguage string                            `json:"programmingLanguage"`
+	Verdict             optional.Value[SubmissionVerdict] `json:"verdict"`
+	Testset             SubmissionTestset                 `json:"testset"`
+	PassedTestCount     int                               `json:"passedTestCount"`
+	TimeConsumedMillis  int                               `json:"timeConsumedMillis"`
+	MemoryConsumedBytes int                               `json:"memoryConsumedBytes"`
+	Points              optional.Value[float64]           `json:"points"`
 }
