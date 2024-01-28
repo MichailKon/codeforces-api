@@ -1,11 +1,11 @@
 package codeforces_api
 
 import (
-	"codeforces-api/objects"
-	"codeforces-api/utils"
 	"crypto/sha512"
 	"encoding/json"
 	"fmt"
+	"github.com/MichailKon/codeforces-api/objects"
+	"github.com/MichailKon/codeforces-api/utils"
 	"github.com/go-resty/resty/v2"
 	"github.com/rkennedy/optional"
 	"math/rand/v2"

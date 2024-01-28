@@ -1,10 +1,10 @@
-module codeforces-api
+module github.com/MichailKon/codeforces-api
 
 go 1.21
 
 require (
 	github.com/go-resty/resty/v2 v2.11.0
-	github.com/mitchellh/mapstructure v1.5.0
+	github.com/rkennedy/optional v0.0.0-20230606164928-9357557b711b
 )
 
 require (
@@ -23,7 +23,6 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rkennedy/magehelper v0.0.0-20230605195436-8ce85ce8e3fa // indirect
-	github.com/rkennedy/optional v0.0.0-20230606164928-9357557b711b // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect

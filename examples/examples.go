@@ -1,9 +1,10 @@
-package main
+package examples
 
 import (
-	codeforcesapi "codeforces-api"
-	"codeforces-api/utils"
 	"fmt"
+	codeforcesapi "github.com/MichailKon/codeforces-api"
+	_ "github.com/MichailKon/codeforces-api/objects"
+	"github.com/MichailKon/codeforces-api/utils"
 )
 
 func main() {
