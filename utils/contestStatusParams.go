@@ -13,6 +13,10 @@ type ContestStatusParams struct {
 	handle    optional.Value[string]
 }
 
+func NewContestStatusParams() *ContestStatusParams {
+	return &ContestStatusParams{}
+}
+
 func (params *ContestStatusParams) WithAsManager(asManager bool) *ContestStatusParams {
 	params.asManager = optional.New(asManager)
 	return params
