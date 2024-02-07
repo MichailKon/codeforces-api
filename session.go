@@ -32,16 +32,6 @@ type CodeforcesClient interface {
 	R() *CodeforcesRequest[any]
 }
 
-func bruh[C CodeforcesRequest[C]](response C) {
-
-}
-
-func aboba() {
-	cl := resty.New()
-	r := cl.R()
-	bruh(r)
-}
-
 type CodeforcesApiError struct {
 	Body       string
 	StatusCode int
