@@ -7,7 +7,6 @@ import (
 	"github.com/MichailKon/codeforces-api/objects"
 	"github.com/MichailKon/codeforces-api/utils"
 	"github.com/go-resty/resty/v2"
-	"github.com/rkennedy/optional"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -18,6 +17,20 @@ import (
 const (
 	baseUrl string = "https://codeforces.com/api"
 )
+
+type CodeforcesResponse interface {
+	StatusCode() int
+	Body() []byte
+}
+
+type CodeforcesRequest[C any] interface {
+	SetQueryParamsFromValues(params url.Values) C
+	Get(url string) (CodeforcesResponse, error)
+}
+
+type CodeforcesClient interface {
+	R() *CodeforcesRequest[any]
+}
 
 type CodeforcesApiError struct {
 	Body       string
@@ -276,24 +289,11 @@ func (session *CodeforcesSession) UserInfo(handles string) ([]*objects.User, err
 	return result, nil
 }
 
-// UserRatedList implements *user.ratedList*
-// TODO
-// activeOnly, includeRetires, contestId are optional
 func (session *CodeforcesSession) UserRatedList(
-	activeOnly optional.Value[bool],
-	includeRetired optional.Value[bool],
-	contestId optional.Value[int],
+	params *utils.UserRatedListParams,
 ) ([]*objects.User, error) {
 	p := url.Values{}
-	activeOnly.If(func(b bool) {
-		p.Set("activeOnly", strconv.FormatBool(b))
-	})
-	includeRetired.If(func(b bool) {
-		p.Set("activeOnly", strconv.FormatBool(b))
-	})
-	contestId.If(func(i int) {
-		p.Set("contestId", strconv.Itoa(i))
-	})
+	params.FillUrlValues(&p)
 	var result []*objects.User
 	if err := session.makeQuery("user.ratedList", p, &result); err != nil {
 		return nil, err
@@ -311,22 +311,13 @@ func (session *CodeforcesSession) UserRating(handle string) ([]*objects.RatingCh
 	return result, nil
 }
 
-// UserStatus implements *user.status*
-// TODO
-// from, count are optional
 func (session *CodeforcesSession) UserStatus(
 	handle string,
-	from optional.Value[int],
-	count optional.Value[int],
+	params *utils.UserStatusParams,
 ) ([]*objects.Submission, error) {
 	p := url.Values{}
 	p.Set("handle", handle)
-	from.If(func(i int) {
-		p.Set("from", strconv.Itoa(i))
-	})
-	count.If(func(i int) {
-		p.Set("count", strconv.Itoa(i))
-	})
+	params.FillUrlValues(&p)
 	var result []*objects.Submission
 	if err := session.makeQuery("user.status", p, &result); err != nil {
 		return nil, err

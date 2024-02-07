@@ -2,6 +2,7 @@ package utils
 
 import (
 	"net/url"
+	"strconv"
 	"testing"
 )
 
@@ -143,5 +144,108 @@ func TestContestStatusParams_WithHandle(t *testing.T) {
 	params := NewContestStatusParams().WithHandle("a")
 	if val, err := params.handle.Get(); err != nil || val != "a" {
 		t.Errorf("Expected \"a\" in handle; got error/wrong value: %v; %v", val, err)
+	}
+}
+
+func TestUserStatusParams_WithCount(t *testing.T) {
+	params := NewUserStatusParams().WithCount(228)
+	if val, err := params.count.Get(); err != nil || val != 228 {
+		t.Errorf("Expected 228 in count; got error/wrong value: %v; %v", val, err)
+	}
+}
+
+func TestUserStatusParams_WithFrom(t *testing.T) {
+	params := NewUserStatusParams().WithFrom(228)
+	if val, err := params.from.Get(); err != nil || val != 228 {
+		t.Errorf("Expected 228 in from; got error/wrong value: %v; %v", val, err)
+	}
+}
+
+func TestUserStatusParams_FillUrlValues(t *testing.T) {
+	params := NewUserStatusParams()
+	expected := make(map[string][]string)
+	out := url.Values{}
+	params.FillUrlValues(&out)
+	if !checkMaps(out, expected) {
+		t.Errorf("expected %v; got %v", expected, out)
+	}
+
+	params = NewUserStatusParams().WithFrom(228)
+	expected["from"] = append(expected["from"], strconv.Itoa(228))
+	out = url.Values{}
+	params.FillUrlValues(&out)
+	if !checkMaps(out, expected) {
+		t.Errorf("expected %v; got %v", expected, out)
+	}
+
+	params = NewUserStatusParams().WithCount(228)
+	expected = make(map[string][]string)
+	expected["count"] = append(expected["count"], strconv.Itoa(228))
+	out = url.Values{}
+	params.FillUrlValues(&out)
+	if !checkMaps(out, expected) {
+		t.Errorf("expected %v; got %v", expected, out)
+	}
+}
+
+func TestNewUserStatusParams(t *testing.T) {
+	params := NewUserStatusParams()
+	if params.from.Present() {
+		t.Errorf("found from in new params")
+	}
+	if params.count.Present() {
+		t.Errorf("found count in new params")
+	}
+}
+
+func TestNewUserRatedListParams(t *testing.T) {
+	params := NewUserRatedListParams()
+	if params.activeOnly.Present() {
+		t.Errorf("found activeOnly in new params")
+	}
+	if params.includeRetired.Present() {
+		t.Errorf("found includeRetired in new params")
+	}
+	if params.contestId.Present() {
+		t.Errorf("found contestId in new params")
+	}
+}
+
+func TestUserRatedListParams_WithActiveOnly(t *testing.T) {
+	params := NewUserRatedListParams().WithActiveOnly(true)
+	if val, err := params.activeOnly.Get(); err != nil || !val {
+		t.Errorf("Expected true in activeOnly; got error/wrong value: %v; %v", val, err)
+	}
+}
+
+func TestUserRatedListParams_WithIncludeRetired(t *testing.T) {
+	params := NewUserRatedListParams().WithIncludeRetired(true)
+	if val, err := params.includeRetired.Get(); err != nil || !val {
+		t.Errorf("Expected true in includeRetires; got error/wrong value: %v; %v", val, err)
+	}
+}
+
+func TestUserRatedListParams_WithContestId(t *testing.T) {
+	params := NewUserRatedListParams().WithContestId(228)
+	if val, err := params.contestId.Get(); err != nil || val != 228 {
+		t.Errorf("Expected 228 in contestId; got error/wrong value: %v; %v", val, err)
+	}
+}
+
+func TestUserRatedListParams_FillUrlValues(t *testing.T) {
+	expected := make(map[string][]string)
+	params := NewUserRatedListParams()
+	out := url.Values{}
+	params.FillUrlValues(&out)
+	if !checkMaps(out, expected) {
+		t.Errorf("Expected %v, got %v", expected, out)
+	}
+
+	expected = map[string][]string{"activeOnly": {"false"}, "includeRetired": {"false"}, "contestId": {"228"}}
+	params = NewUserRatedListParams().WithActiveOnly(false).WithIncludeRetired(false).WithContestId(228)
+	out = url.Values{}
+	params.FillUrlValues(&out)
+	if !checkMaps(out, expected) {
+		t.Errorf("Expected %v, got %v", expected, out)
 	}
 }
