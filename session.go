@@ -18,20 +18,6 @@ const (
 	baseUrl string = "https://codeforces.com/api"
 )
 
-type CodeforcesResponse interface {
-	StatusCode() int
-	Body() []byte
-}
-
-type CodeforcesRequest[C any] interface {
-	SetQueryParamsFromValues(params url.Values) C
-	Get(url string) (CodeforcesResponse, error)
-}
-
-type CodeforcesClient interface {
-	R() *CodeforcesRequest[any]
-}
-
 type CodeforcesApiError struct {
 	Body       string
 	StatusCode int
@@ -199,7 +185,9 @@ func (session *CodeforcesSession) ContestStandings(
 ) (*objects.ContestStandings, error) {
 	p := url.Values{}
 	p.Set("contestId", strconv.Itoa(contestId))
-	params.FillUrlValues(&p)
+	if params != nil {
+		params.FillUrlValues(&p)
+	}
 	var result *objects.ContestStandings
 	if err := session.makeQuery("contest.standings", p, &result); err != nil {
 		return nil, err
@@ -213,9 +201,11 @@ func (session *CodeforcesSession) ContestStatus(
 ) ([]*objects.Submission, error) {
 	p := url.Values{}
 	p.Set("contestId", strconv.Itoa(contestId))
-	params.FillUrlValues(&p)
+	if params != nil {
+		params.FillUrlValues(&p)
+	}
 	var result []*objects.Submission
-	if err := session.makeQuery("contest.standings", p, &result); err != nil {
+	if err := session.makeQuery("contest.status", p, &result); err != nil {
 		return nil, err
 	}
 	return result, nil
@@ -293,7 +283,9 @@ func (session *CodeforcesSession) UserRatedList(
 	params *utils.UserRatedListParams,
 ) ([]*objects.User, error) {
 	p := url.Values{}
-	params.FillUrlValues(&p)
+	if params != nil {
+		params.FillUrlValues(&p)
+	}
 	var result []*objects.User
 	if err := session.makeQuery("user.ratedList", p, &result); err != nil {
 		return nil, err
@@ -317,7 +309,9 @@ func (session *CodeforcesSession) UserStatus(
 ) ([]*objects.Submission, error) {
 	p := url.Values{}
 	p.Set("handle", handle)
-	params.FillUrlValues(&p)
+	if params != nil {
+		params.FillUrlValues(&p)
+	}
 	var result []*objects.Submission
 	if err := session.makeQuery("user.status", p, &result); err != nil {
 		return nil, err
